@@ -1,7 +1,5 @@
 streamlit
-genanki
-gtts
-googletrans==4.0.0-rc1
+deep-translator
+gTTS
+Pillow
 requests
-pillow
-nltk
