@@ -8,10 +8,19 @@ from nltk.corpus import wordnet as wn
 import time, io, os, re
 from PIL import Image, ImageDraw
 
+# --- Cấu hình thư mục NLTK data để chạy trên Streamlit Cloud ---
+nltk_data_dir = os.path.join(os.getcwd(), "nltk_data")
+os.makedirs(nltk_data_dir, exist_ok=True)
+
+nltk.data.path.append(nltk_data_dir)
+
 # --- Tải dữ liệu NLTK nếu chưa có ---
-nltk.download("punkt")
-nltk.download("averaged_perceptron_tagger")
-nltk.download("wordnet")
+if not os.path.exists(os.path.join(nltk_data_dir, "taggers", "averaged_perceptron_tagger")):
+    nltk.download("averaged_perceptron_tagger", download_dir=nltk_data_dir)
+if not os.path.exists(os.path.join(nltk_data_dir, "corpora", "wordnet")):
+    nltk.download("wordnet", download_dir=nltk_data_dir)
+if not os.path.exists(os.path.join(nltk_data_dir, "tokenizers", "punkt")):
+    nltk.download("punkt", download_dir=nltk_data_dir)
 
 # --- Hàm xác định loại từ ---
 def pos_simple(tag):
@@ -30,12 +39,12 @@ def get_definition(word):
     syns = wn.synsets(word)
     return syns[0].definition() if syns else ""
 
-# --- Hàm dịch nghĩa sang tiếng Việt ---
+# --- Hàm dịch sang tiếng Việt ---
 def translate_word(word):
     try:
         return GoogleTranslator(source="en", target="vi").translate(word)
     except:
-        return word  # fallback nếu lỗi
+        return word
 
 # --- Hàm lấy hình ảnh từ Wikipedia ---
 def fetch_image(word):
@@ -60,7 +69,7 @@ def fetch_image(word):
     except:
         pass
 
-    # fallback: tạo ảnh placeholder
+    # fallback: placeholder
     img = Image.new("RGB", (400, 250), (230,230,230))
     d = ImageDraw.Draw(img)
     d.text((20,100), word, fill=(0,0,0))
