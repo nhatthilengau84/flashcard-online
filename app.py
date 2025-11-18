@@ -11,7 +11,6 @@ from PIL import Image, ImageDraw
 # --- Cấu hình thư mục NLTK data để chạy trên Streamlit Cloud ---
 nltk_data_dir = os.path.join(os.getcwd(), "nltk_data")
 os.makedirs(nltk_data_dir, exist_ok=True)
-
 nltk.data.path.append(nltk_data_dir)
 
 # --- Tải dữ liệu NLTK nếu chưa có ---
